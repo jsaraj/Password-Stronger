@@ -1,11 +1,42 @@
 
 
 import React, { useState } from 'react'
+import zxcvbn from 'zxcvbn';
 
 export default function PasswordStraonger() {
 
     const [pass, setPass] = useState('');
-    console.log(pass)
+    const res = zxcvbn(pass).score * 100 / 4;
+
+    const progressColor = () => {
+        switch (res) {
+            case 25:
+                return "#ff5722";
+            case 50:
+                return "#ffeb3b";
+            case 75:
+                return "#8bc34a";
+            case 100:
+                return "#4caf50";
+            default:
+                return "none"
+        }
+    }
+
+    const progressTitle = () => {
+        switch (res) {
+            case 25:
+                return "Very Weak";
+            case 50:
+                return "Weak";
+            case 75:
+                return "Strong";
+            case 100:
+                return "Very Strong";
+            default:
+                return "none"
+        }
+    }
 
     return (
         <div className='bg-gray-200 mx-auto my-20 w-4/12 rounded-md p-5'>
@@ -15,9 +46,9 @@ export default function PasswordStraonger() {
             <div>
                 <input type='text' onChange={(e) => setPass(e.target.value)} className='w-full p-2 focus:outline-none shadow-sm rounded-md mb-8'></input>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-500">
-                    <div className="bg-green-600 h-2.5 rounded-full dark:bg-green-500" style={{ width: "45%" }}></div>
+                    <div className=" h-2.5 rounded-full" style={{ width: res + "%", background: progressColor() }}></div>
                 </div>
-                <p className='text-center'>Strong</p>
+                <p className='text-center' style={{ color: progressColor() }}>{progressTitle()}</p>
             </div>
         </div>
 
